@@ -80,5 +80,6 @@ Streamlit run TASK-5_OpenSearch_LLM_RAG_Streamlit_Chatbot_Example.py
 Studio 도메인 URL과 유사한 URL을 사용하여 새 브라우저 탭에서 앱에 액세스할 수 있습니다. 예를 들어 Studio URL이
 https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/lab?
 인 걍우 Streamlit 앱의 URL은
-https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/webapp 입니다. (lab이 proxy/8501/webapp로 대체됩니다.) 이전 단계에서 확인된 포트 번호가 8501과 다른 경우 Streamlit 앱의 URL에 8501 대신 해당 포트 번호를 사용하세요.
+https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/webapp 입니다. 
+(lab이 proxy/8501/webapp로 대체됩니다.) 이전 단계에서 확인된 포트 번호가 8501과 다른 경우 Streamlit 앱의 URL에 8501 대신 해당 포트 번호를 사용하세요.
 ```
