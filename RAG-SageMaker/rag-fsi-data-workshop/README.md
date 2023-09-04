@@ -34,7 +34,7 @@ RAG (Retrieval-Augmented Generation)는 최신의 자연어 처리 (NLP) 분야�
 - **검색 엔진 (Retriever)**  
   주어진 질의에 따라 관련된 문서나 정보를 데이터베이스에서 검색합니다.
     - Amazon OpenSearch의 Faiss vector store를 활용합니다.
-    - Faiss의 임베딩 검색은 `similarity_search_with_score` 함수를 사용하여 L2 Norm을 기준으로 유사도를 계산합니다.
+    - Faiss의 임베딩 검색은 [`similarity_search_with_score`](https://python.langchain.com/docs/integrations/vectorstores/faiss) 함수를 사용하여 L2 Norm을 기준으로 유사도를 계산합니다.
 
 - **순위 매기기 (Ranking)**  
   검색된 정보를 관련성이 높은 순으로 정렬합니다.
