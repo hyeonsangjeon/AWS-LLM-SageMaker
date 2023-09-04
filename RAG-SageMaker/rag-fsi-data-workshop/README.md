@@ -12,6 +12,7 @@
 RAG (Retrieval-Augmented Generation)는 최신의 자연어 처리 (NLP) 분야에서 많은 관심을 받고 있는 아키텍처입니다. 기본적으로, RAG는 문제 해결을 위한 정보를 검색(retrieval)하고 그 정보를 바탕으로 문장을 생성(generation)하는 두 가지 과정을 통합합니다. 
 이 실습에서는 RAG 아키텍처가 어떻게 Context 기반의 프롬프트 확장을 가능하게 하는지에 대해 설명합니다. 또한, RAG가 어떻게 Amazon Opensearch와 통합되어 외부의 신뢰할 수 있는 데이터베이스나 문서를 검색하는 과정을 강화하는지에 대해 실습합니다.
 
+
 ## Context 기법의 확장
 전통적인 Seq2Seq (Sequence-to-Sequence) 모델은 주어진 입력에 대해 출력을 생성하기 위해 고정된 수의 토큰을 사용합니다. 그러나 RAG는 이러한 접근 방식을 확장하여 다양한 문맥 정보를 수집하고 활용할 수 있습니다. 이러한 확장성은 프롬프트 엔지니어링에 큰 유리함을 제공합니다.
 
@@ -25,6 +26,27 @@ RAG (Retrieval-Augmented Generation)는 최신의 자연어 처리 (NLP) 분야�
 
 예를 들어, 사용자가 "세계에서 가장 높은 산은 무엇인가요?"라고 물을 경우, 일반적인 Seq2Seq 모델은 사전 학습된 지식만을 바탕으로 답변을 생성합니다. 그러나 RAG 모델은 외부의 신뢰할 수 있는 데이터베이스나 문서를 검색하여, 현재까지 알려진 가장 정확한 정보를 제공할 수 있습니다.
 
+### RAG의 주요 구성 요소
+
+- **문제 질의 (Query)**  
+  사용자가 특정 질문이나 문제를 제시합니다.
+
+- **검색 엔진 (Retriever)**  
+  주어진 질의에 따라 관련된 문서나 정보를 데이터베이스에서 검색합니다.
+    - Amazon OpenSearch의 Faiss vector store를 활용합니다.
+    - Faiss의 임베딩 검색은 `similarity_search_with_score` 함수를 사용하여 L2 Norm을 기준으로 유사도를 계산합니다.
+
+- **순위 매기기 (Ranking)**  
+  검색된 정보를 관련성이 높은 순으로 정렬합니다.
+    - 로컬 Faiss 검색의 경우, L2 distance search를 사용하며, 값이 클수록 높은 에러를 나타냅니다.
+    - OpenSearch에서는 Faiss의 ranking score를 정규화하여, 값이 클수록 높은 유사도를 나타냅니다.
+
+- **생성 모델 (Generator)**  
+  정렬된 문서나 정보를 기반으로 최종 답변을 생성합니다.
+    - Ployglot 12.8B 또는 5.8B 한국어 LLM (KULLM 모델)을 사용합니다.
+
+- **응답 (Output)**  
+  생성된 답변이 프롬프트 엔지니어링을 거쳐 문장 형태로 사용자에게 반환됩니다.
 
 ### RAG와 Amazon Opensearch의 통합
 <div align="center">
