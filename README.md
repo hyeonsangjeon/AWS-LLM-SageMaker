@@ -7,7 +7,18 @@
 
 
 
-## 
+## LLM - RAG : Opensearch with SageMaker Endpoint LLM Ployglot 
 1. [Amazon SageMaker와 Amazon Opensearch로 RAG (Retrieval-Augmented Generation) 구현실습 ](https://github.com/hyeonsangjeon/AWS-LLM-SageMaker/tree/main/RAG-SageMaker/rag-fsi-data-workshop) - 
 RAG (Retrieval-Augmented Generation)는 정보 검색과 텍스트 생성을 결합한 혁신적인 NLP 아키텍처입니다. 이번 실습에서는 RAG가 어떻게 Amazon Opensearch와 통합되어 외부의 신뢰할 수 있는 데이터베이스나 문서를 검색하는 과정을 강화하는지 간단한 실습을 통해 알아봅니다.
 이 실습에서는 SageMaker Endpoint와 Amazon Openssearch에서 Embedding 데이터 입력, SDK, 그리고 [LangChain](https://python.langchain.com/docs/get_started/introduction) 및 [FAISS](https://faiss.ai/index.html)와 같은 오픈소스 소프트웨어를 통해 이러한 패턴을 구현하는 실무 경험을 쌓을 수 있습니다.
+
+
+
+## [Tuner] QLoRA fine-tuning 
+- [KULLM-Polyglot-12.8B](PEFT)
+
+### Filenames
+- `1_prepare-dataset-alpaca-method.ipynb`: instruction 데이터 세트로부터 훈련 데이터 세트를 준비합니다. 각 샘플을 토크나이즈하는 방식입니다.
+- `1_prepare-dataset-chunk-method.ipynb`: instruction 데이터 세트로부터 훈련 데이터 세트를 준비합니다. 샘플을 모두 모아서(concatenate) 청크 크기(chunk size)만큼 분할하는 방식입니다.
+- `2_local-train-debug-lora.ipynb`: 본격적으로 훈련 인스턴스에서 수행하기 전에 개발 환경에서 일부 샘플 데이터로 디버그를 수행합니다. 이미 파인 튜닝에 익숙한 분들은 이 핸즈온을 건너뛰고 3_sm-train-lora.ipynb을 진행해 주세요.
+- `3_sm-train-lora.ipynb`: SageMaker 훈련 인스턴스에서 파인튜닝을 수행합니다. 
