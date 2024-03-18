@@ -4,7 +4,7 @@ from typing import List
 import argparse
 import torch
 import transformers
-from datasets import load_dataset, load_from_disk      
+from datasets import load_dataset, load_from_disk
 from transformers import BitsAndBytesConfig
 from pathlib import Path
 from huggingface_hub import snapshot_download
@@ -31,12 +31,13 @@ def parse_args():
     parser.add_argument("--save_path", type=str, default="./model")
     parser.add_argument("--save_merged_model", type=bool, default=False)
 
-    # add training hyperparameters for epochs, batch size, learning rate, and seed
+    # add training hyperparameters
     parser.add_argument("--batch_size", type=int, default=1, help="Batch size to use for training.")
     parser.add_argument("--num_epochs", type=int, default=1)
     parser.add_argument("--learning_rate", type=float, default=2e-5, help="Learning rate to use for training.")
     parser.add_argument("--gradient_accumulation_steps", type=int, default=2)
-    
+    parser.add_argument("--lr_scheduler_type", type=str, default="linear")
+
     # quantization parameters
     parser.add_argument("--quant_8bit", type=bool, default=False)
     parser.add_argument("--quant_4bit", type=bool, default=True)
@@ -45,25 +46,25 @@ def parse_args():
     parser.add_argument("--lora_r", type=int, default=8)
     parser.add_argument("--lora_alpha", type=int, default=32)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
-              
+
     # llm hyperparams
     parser.add_argument("--group_by_length", type=bool, default=False)
-    
+
     # wandb params
     parser.add_argument("--wandb_project", type=str, default="")
     parser.add_argument("--wandb_run_name", type=str, default="")
     parser.add_argument("--wandb_watch", type=str, default="") # options: false | gradients | all
     parser.add_argument("--wandb_log_model", type=str, default="") # options: false | true
-    
+
     parser.add_argument("--save_steps", type=int, default=200)
     parser.add_argument("--eval_steps", type=int, default=200)
-    
+
     parser.add_argument(
         "--bf16",
         type=bool,
         default=True if torch.cuda.get_device_capability()[0] == 8 else False,
         help="Whether to use bf16.",
-    )    
+    )
     args = parser.parse_known_args()
     return args
 
@@ -75,11 +76,12 @@ def train(args):
     data_path = args.data_path
     output_dir = args.output_dir
     save_path = args.save_path
-    save_merged_model = args.save_merged_model  
+    save_merged_model = args.save_merged_model
     batch_size = args.batch_size
     num_epochs = args.num_epochs
     learning_rate = args.learning_rate
     gradient_accumulation_steps = args.gradient_accumulation_steps
+    lr_scheduler_type = args.lr_scheduler_type
     quant_8bit = args.quant_8bit
     quant_4bit = args.quant_4bit
     lora_r = args.lora_r
@@ -93,7 +95,7 @@ def train(args):
     save_steps = args.save_steps
     eval_steps = args.eval_steps
     bf16 = args.bf16
-    
+
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
             f"Training Alpaca-LoRA model with params:\n"
@@ -108,6 +110,7 @@ def train(args):
             f"num_epochs: {num_epochs}\n"
             f"learning_rate: {learning_rate}\n"
             f"gradient_accumulation_steps: {gradient_accumulation_steps}\n"
+            f"lr_scheduler_type: {lr_scheduler_type}\n"
             f"quant_8bit: {quant_8bit}\n"
             f"quant_4bit: {quant_4bit}\n"
             f"lora_r: {lora_r}\n"
@@ -119,15 +122,15 @@ def train(args):
             f"wandb_watch: {wandb_watch}\n"
             f"wandb_log_model: {wandb_log_model}\n"
             f"save_steps: {save_steps}\n"
-            f"eval_steps: {eval_steps}\n"            
+            f"eval_steps: {eval_steps}\n"
         )
     assert base_model, "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
- 
+
     os.makedirs(output_dir, exist_ok=True)
     device_map = "auto"
     world_size = int(os.environ.get("WORLD_SIZE", 1))
     print(f"world_size: {world_size}")
-    
+
     ddp = world_size != 1
     if ddp:
         device_map = {"": int(os.environ.get("LOCAL_RANK") or 0)}
@@ -136,8 +139,7 @@ def train(args):
 
     # Check if parameter passed or if set within environ
     use_wandb = len(wandb_project) > 0 or ("WANDB_PROJECT" in os.environ and len(os.environ["WANDB_PROJECT"]) > 0)
-    #use_wandb = len(wandb_project) > 0
-    
+
     # Only overwrite environ if wandb param passed
     if len(wandb_project) > 0:
         os.environ["WANDB_PROJECT"] = wandb_project
@@ -148,17 +150,17 @@ def train(args):
 
     if quant_4bit:
         nf4_config = BitsAndBytesConfig(
-           load_in_4bit=True,
-           bnb_4bit_quant_type="nf4",
-           bnb_4bit_use_double_quant=True,
-           bnb_4bit_compute_dtype=torch.bfloat16
-    )
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
     else:
         nf4_config = None
 
     tokenizer = GPTNeoXTokenizerFast.from_pretrained(pretrained_model_path)
     tokenizer.pad_token_id = 0  # unk. we want this to be different from the eos token
-    tokenizer.padding_side = "left"  # Allow batched inference 
+    tokenizer.padding_side = "left"  # Allow batched inference
 
     model = GPTNeoXForCausalLM.from_pretrained(
         #base_model,
@@ -167,7 +169,7 @@ def train(args):
         torch_dtype=torch.float16,
         device_map=device_map,
         cache_dir=cache_dir,
-        quantization_config=nf4_config, 
+        quantization_config=nf4_config,
     )
 
     model = prepare_model_for_kbit_training(model)
@@ -219,7 +221,7 @@ def train(args):
     val_set_size = 0
     train_data = data
     val_data = None
-    
+
     # if not ddp and torch.cuda.device_count() > 1:
     #     # keeps Trainer from trying its own DataParallelism when more than 1 gpu is available
     #     model.is_parallelizable = True
@@ -238,6 +240,7 @@ def train(args):
             bf16=bf16,  # Use BF16 if available
             logging_steps=1,
             optim="paged_adamw_8bit",
+            lr_scheduler_type=lr_scheduler_type,
             evaluation_strategy="steps" if val_set_size > 0 else "no",
             save_strategy="steps",
             save_steps=save_steps,
@@ -270,8 +273,8 @@ def train(args):
 
     # Save Model
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
-        if save_merged_model: 
-            print(f'Save LoRA model: {output_dir}')    
+        if save_merged_model:
+            print(f'Save LoRA model: {output_dir}')
             trainer.model.save_pretrained(output_dir)
 
             # Saving merged model
@@ -282,12 +285,12 @@ def train(args):
             merged_model = model.merge_and_unload()
             merged_model.save_pretrained(save_path, safe_serialization=True)
         else:
-            print(f'Save LoRA model: {save_path}') 
+            print(f'Save LoRA model: {save_path}')
             trainer.model.save_pretrained(save_path)
 
-        tokenizer.save_pretrained(save_path)        
-    
-    # clear memory
+        tokenizer.save_pretrained(save_path)
+
+        # clear memory
     del model
     del trainer
 
