@@ -95,23 +95,23 @@ Amazon Opensearch의 통합은 RAG 아키텍처의 정보 검색 능력을 더�
 
 ### Step 5. Streamlit으로 QnA 챗봇 모델 생성해보기 
 [보기 - TASK-5_OpenSearch_LLM_RAG_Streamlit_Chatbot_Example.py](https://github.com/hyeonsangjeon/AWS-LLM-SageMaker/blob/main/RAG-SageMaker/rag-fsi-data-workshop/TASK-5_OpenSearch_LLM_RAG_Streamlit_Chatbot_Example.py)
-1. SageMaker Studio System Terminal을 엽니다.
-2. System Terminal 환경에서 Streamlit관련 패키지들을 설치합니다.
+1. SageMaker Studio의 Jupyter Lab에서 Terminal을 엽니다.
+2. Terminal 환경에서 Streamlit관련 패키지들을 설치합니다.
 ```sh
-pip install -r AWS-LLM-SageMaker/RAG-SageMaker/rag-fsi-data-workshop/requirements.txt
+pip install -r /home/sagemaker-user/AWS-LLM-SageMaker/RAG-SageMaker/rag-fsi-data-workshop/requirements.txt
 
 ```
 4. Streamlit 앱 파일을 오픈하고, SageMaker Embedding Vector 모델, Ployglot LLM 모델, opensearch_domain_endpoint 정보를 입력 수정합니다.
 5. Streamlit을 실행해봅니다.
 ```sh
-Streamlit run TASK-5_OpenSearch_LLM_RAG_Streamlit_Chatbot_Example.py
+streamlit run TASK-5_OpenSearch_LLM_RAG_Streamlit_Chatbot_Example.py
 ```
 6. QnA 챗봇 로직은 알맞게 수정해봅니다. 
 7. 앱을 실행하여 챗봇 모델이 잘 동작하는지 테스트합니다.
 ``` text
-Studio 도메인 URL과 유사한 URL을 사용하여 새 브라우저 탭에서 앱에 액세스할 수 있습니다. 예를 들어 Studio URL이
-https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/lab?
+Studio의 Jupyter Lab 도메인 URL과 유사한 URL을 사용하여 새 브라우저 탭에서 앱에 액세스할 수 있습니다. 예를 들어 Jupyter Lab URL이
+https://t0r5tpibtvoywyw.studio.us-east-1.sagemaker.aws/jupyterlab/default/lab?
 인 걍우 Streamlit 앱의 URL은
-https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/webapp 입니다. 
-(lab이 proxy/8501/webapp로 대체됩니다.) 이전 단계에서 확인된 포트 번호가 8501과 다른 경우 Streamlit 앱의 URL에 8501 대신 해당 포트 번호를 사용하세요.
+https://d-randomidentifier.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/ 입니다. 
+(lab이 proxy/8501/로 대체됩니다. 8501/ 마지막 슬레시를 꼭 붙여줍니다.) 이전 단계에서 확인된 포트 번호가 8501과 다른 경우 Streamlit 앱의 URL에 8501 대신 해당 포트 번호를 사용하세요.
 ```
