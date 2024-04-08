@@ -6,7 +6,7 @@
 이는 이메일 작성, 텍스트 요약, 질문에 대한 답변, 챗봇 구축, 이미지 생성에 도움이 되는 기초 모델을 활용하여 달성할 수 있습니다.
 
 
-# AWS Samples Github 배포 실습 자료 안내
+### AWS Samples Github 배포 실습 자료 안내
 
 본 실습 자료는 AWS Samples Github에 배포됩니다. 현재 실습 자료는 AWS Samples 공식 자료보다 항상 최신 선반영됩니다.
 
