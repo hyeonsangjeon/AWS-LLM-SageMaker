@@ -12,14 +12,12 @@
 
 #### LLM - RAG: Opensearch with SageMaker Endpoint LLM Polyglot
 - 토픽: LLM - RAG: Opensearch with SageMaker Endpoint LLM Polyglot
-- 반영된 링크: genai/aws-gen-ai-kr/20_applications/04_rag_finance_opensearch_sllm_workshop
-- 링크: https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/20_applications/04_rag_finance_opensearch_sllm_workshop
-- 최근 반영일: 2024.04.05
+- 반영 링크: https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/20_applications/04_rag_finance_opensearch_sllm_workshop
+- 최근 반영일: 2024.04.25
 
 #### [Tuner] QLoRA fine-tuning
 - 토픽: [Tuner] QLoRA fine-tuning
-- 반영된 링크: genai/aws-gen-ai-kr/30_fine_tune/01-instruction-tuning-peft-qlora
-- 링크: https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/30_fine_tune/01-instruction-tuning-peft-qlora
+- 반영 링크: https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/30_fine_tune/01-instruction-tuning-peft-qlora
 - 최근 반영일: 2024.04.18
 
 ## LLM - RAG : Opensearch with SageMaker Endpoint LLM Ployglot
