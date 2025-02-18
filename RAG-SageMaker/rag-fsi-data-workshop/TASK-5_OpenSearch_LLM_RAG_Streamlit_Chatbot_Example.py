@@ -25,8 +25,17 @@ from streamlit_util import KoSimCSERobertaContentHandler, KullmContentHandler, S
 
 ##########################################################################################################################################################################
 # pip install -r ./requirements.txt in the system terminal
-# Studio의 Stramlit URL은 domain의 lab이 proxy/8501/webapp로 대체됩니다.
-# ex > https://d-l2kk7xvxmnbl.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/
+# 
+#
+# Case 1:  SageMaker notebook Instance 
+# notebook Instance의 Stramlit URL은 lab이하의 정보가 proxy/8501/로 대체됩니다.
+## uri : https://ori-cuda-version.notebook.us-east-1.sagemaker.aws/lab/tree/main.ipynb
+## streamlit : https://ori-cuda-version.notebook.us-east-1.sagemaker.aws/proxy/8501/
+#
+# Case 2: SageMaker Studio lab 
+# Studio의 Stramlit URL은 domain의 lab이하의 정보가 proxy/8501/webapp로 대체됩니다.
+## uri > https://d-l2kk7xvxmnbl.studio.us-east-1.sagemaker.aws/jupyter/default/lab? 
+## streamlit : https://d-l2kk7xvxmnbl.studio.us-east-1.sagemaker.aws/jupyter/default/proxy/8501/webapp로
 # 참고 : https://aws.amazon.com/ko/blogs/tech/build-a-powerful-question-answering-bot-with-amazon-sagemaker-amazon-opensearch-service-streamlit-and-langchain/
 #########################################################################################################################################################################
 
