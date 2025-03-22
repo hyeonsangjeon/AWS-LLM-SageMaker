@@ -26,7 +26,8 @@
    이 실습에서는 SageMaker Endpoint와 Amazon Openssearch에서 Embedding 데이터 입력, SDK, 그리고 [LangChain](https://python.langchain.com/docs/get_started/introduction) 및 [FAISS](https://faiss.ai/index.html)와 같은 오픈소스 소프트웨어를 통해 이러한 패턴을 구현하는 실무 경험을 쌓을 수 있습니다.
 
 
-
+#### SageMaker Training deep-learning-containers
+- deep-learning Base Container image link : https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 
 ## [Tuner] QLoRA fine-tuning
 - [KULLM-Polyglot-12.8B](PEFT)
